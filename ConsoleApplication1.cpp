@@ -113,15 +113,19 @@ int loops(int stride, vector<int>& parents, vector<Node>& root, Node start, Node
         if (visited[parentCoor] == UNVISITED || visited[parentCoor] == VISITED) {
           current = parent;
           visited[parentCoor] = VISITED_IN_PROCESS;
-          cout << "Case 1: Start visit process for " << current.x << " " << current.y << endl;
+          // cout << "Case 1: Start visit process for " << current.x << " " << current.y << endl;
         }
         else if (visited[parentCoor] == VISITED_IN_PROCESS) {
           stk.pop_back();
           visited[parentCoor] = VISITED_FAILED;
-          cout << "Case 3: Visited FAILED" << endl;
+          // cout << "Case 3: Visited FAILED" << endl;
           continue;
         }
         else {
+          State s = (State)visited[parentCoor];
+          stk.pop_back();
+          visited[parentCoor] = VISITED_FAILED;
+          // cout << "Case 3: Visited FAILED" << endl;
           throw std::runtime_error("Invalid state");
         }
       }
@@ -129,7 +133,7 @@ int loops(int stride, vector<int>& parents, vector<Node>& root, Node start, Node
         current = q.front();
         q.pop_front();
       }
-      cout << current.x << " " << current.y << endl;
+      //cout << current.x << " " << current.y << endl;
 
       for (auto [dx, dy] : directions) {
         Node next = { current.x + dx, current.y + dy };
@@ -184,7 +188,7 @@ int loops(int stride, vector<int>& parents, vector<Node>& root, Node start, Node
     }
 
     parents = parentsCpy;
-    print(parents, root, start, end, grid);
+    // print(parents, root, start, end, grid);
   }
 
   return count == stride;
@@ -230,13 +234,13 @@ tuple<std::vector<std::vector<int>>, Node, Node> readGridFromFile(const std::str
 
 int main()
 {
-  std::string filename = "grid.txt";
+  std::string filename = "large_grid1.txt";
   auto [grid, start, end] = readGridFromFile(filename);
 
 
   std::vector<int> parents(grid.size() * grid[0].size(), -1);
   std::vector<Node> root;
-  bool canfind = loops(2, parents, root, start, end, grid);
+  bool canfind = loops(4, parents, root, start, end, grid);
   print(parents, root, start, end, grid);
 }
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
