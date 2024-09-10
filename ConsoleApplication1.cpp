@@ -115,7 +115,7 @@ int loops(int stride, vector<int>& parents, vector<Node>& root, Node start, Node
           visited[parentCoor] = VISITED_IN_PROCESS;
           // cout << "Case 1: Start visit process for " << current.x << " " << current.y << endl;
         }
-        else if (visited[parentCoor] == VISITED_IN_PROCESS) {
+        else if (visited[parentCoor] == VISITED_IN_PROCESS || visited[parentCoor] == VISITED_FAILED) {
           stk.pop_back();
           visited[parentCoor] = VISITED_FAILED;
           // cout << "Case 3: Visited FAILED" << endl;
@@ -123,9 +123,6 @@ int loops(int stride, vector<int>& parents, vector<Node>& root, Node start, Node
         }
         else {
           State s = (State)visited[parentCoor];
-          stk.pop_back();
-          visited[parentCoor] = VISITED_FAILED;
-          // cout << "Case 3: Visited FAILED" << endl;
           throw std::runtime_error("Invalid state");
         }
       }
@@ -191,7 +188,7 @@ int loops(int stride, vector<int>& parents, vector<Node>& root, Node start, Node
     // print(parents, root, start, end, grid);
   }
 
-  return count == stride;
+  return count;
 }
 
 tuple<std::vector<std::vector<int>>, Node, Node> readGridFromFile(const std::string& filename) {
@@ -234,14 +231,17 @@ tuple<std::vector<std::vector<int>>, Node, Node> readGridFromFile(const std::str
 
 int main()
 {
-  std::string filename = "large_grid1.txt";
+  const std::string filename = "large_grid1.txt";
+  const std::string filename2 = "grid1.txt";
   auto [grid, start, end] = readGridFromFile(filename);
+  const int stride = 4;
 
 
   std::vector<int> parents(grid.size() * grid[0].size(), -1);
   std::vector<Node> root;
-  bool canfind = loops(4, parents, root, start, end, grid);
+  int canfind = loops(stride, parents, root, start, end, grid);
   print(parents, root, start, end, grid);
+  std::cout << "Can find: " << canfind << std::endl;
 }
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
